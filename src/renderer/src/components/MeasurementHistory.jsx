@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 
@@ -52,7 +52,7 @@ const MeasurementHistory = () => {
   }, []);
 
   return (
-    <div className="w-full mx-auto p-6 h-auto bg-white rounded-lg shadow-lg">
+    <div className="w-full mx-auto p-6 h-80 bg-white rounded-lg shadow-lg">
       
 
       {/* Gráfico de líneas */}

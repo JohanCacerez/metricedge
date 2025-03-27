@@ -3,6 +3,11 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { initializeDatabase } from '../renderer/src/backend/dbService'
+import { registerUserIPCListeners } from '../renderer/src/backend/users/userController'
+import {readSensorIPCListeners} from '../renderer/src/backend/sensor/sensorController'
+import { read } from 'fs'
+
+const { exec } = require('child_process')
 
 initializeDatabase()
 
@@ -59,6 +64,8 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
+  registerUserIPCListeners()
+  readSensorIPCListeners()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -75,6 +82,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.

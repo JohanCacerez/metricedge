@@ -33,7 +33,7 @@ const ModelChange = () => {
   };
 
   return (
-    <div className="w-full mx-auto p-6 h-70 bg-white rounded-lg shadow-lg flex flex-col justify-between">
+    <div className="w-full mx-auto p-6 h-80 bg-white rounded-lg shadow-lg flex flex-col justify-between">
       <h2 className="text-xl font-semibold text-gray-800">Modelo Actual</h2>
 
       <div>

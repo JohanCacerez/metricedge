@@ -1,8 +1,21 @@
+import { useUser } from "../context/UserContext"; // Asegúrate de importar el contexto
 import ModelChange from "../components/ModelChange";
 import MeasurementHistory from "../components/MeasurementHistory";
 import MeasureCapture from "../components/MeasureCapture";
 
 export default function MenuPage() {
+  const { user } = useUser(); // Obtiene el usuario desde el contexto
+
+  console.log(user)
+
+  if (!user) {
+    return (
+      <div className="flex flex-col space-y-2 h-full">
+        <p className="text-center text-lg">Por favor, inicie sesión para acceder a esta página.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col space-y-2 h-full">
       {/* Primera fila con ModelChange y MeasurementHistory */}
@@ -14,9 +27,7 @@ export default function MenuPage() {
           <MeasurementHistory />
         </div>
       </div>
-
-      {/* Segunda fila con MeasureCapture ocupando todo el ancho */}
-      <div>
+      <div className="flex-1 overflow-auto">
         <MeasureCapture />
       </div>
     </div>

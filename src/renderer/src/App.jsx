@@ -19,7 +19,7 @@ function App() {
     <HashRouter>
       <div className="flex">
         <Navbar user={user} onLogout={handleLogout} />
-        <div className="flex-1 bg-gray_light">
+        <div className="flex-1 p-8 bg-gray_light">
           <Routes>
             <Route path="/" element={<MenuPage />} />
             <Route path="*" element={<h1>404 - Página no encontrada</h1>} />

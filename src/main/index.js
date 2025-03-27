@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -7,10 +7,12 @@ import { initializeDatabase } from '../renderer/src/backend/dbService'
 initializeDatabase()
 
 function createWindow() {
-  // Create the browser window.
+  
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
   const mainWindow = new BrowserWindow({
-    width: 1240,
-    height: 670,
+    width: width,
+    height: height,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),

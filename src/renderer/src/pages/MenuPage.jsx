@@ -1,13 +1,23 @@
 import ModelChange from "../components/ModelChange";
+import MeasurementHistory from "../components/MeasurementHistory";
+import MeasureCapture from "../components/MeasureCapture";
 
 export default function MenuPage() {
   return (
-    <div className="grid grid-cols-4 grid-rows-2">
-      <div className="col-span-2 pr-2">
-      <ModelChange />
+    <div className="flex flex-col space-y-2 h-full">
+      {/* Primera fila con ModelChange y MeasurementHistory */}
+      <div className="flex">
+        <div className="w-1/2 pr-2">
+          <ModelChange />
+        </div>
+        <div className="w-1/2 pl-2">
+          <MeasurementHistory />
+        </div>
       </div>
-      <div className="col-span-2 pl-2">
-      <ModelChange />
+
+      {/* Segunda fila con MeasureCapture ocupando todo el ancho */}
+      <div>
+        <MeasureCapture />
       </div>
     </div>
   );

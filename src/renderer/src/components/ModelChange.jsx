@@ -24,16 +24,16 @@ const ModelChange = () => {
 
   // Función para separar el modelo en dos partes: en negrita "Front" y en normal "LH"
   const formatModel = (model) => {
-    const [firstPart, secondPart] = model.split(" ");
+    const [firstPart, ...rest] = model.split(" ");
     return (
       <span>
-        <strong>{firstPart}</strong> {secondPart}
+        <strong>{firstPart}</strong> {rest.join(" ")}
       </span>
     );
   };
 
   return (
-    <div className="w-full h-full mx-auto p-6 bg-white rounded-lg shadow-lg flex flex-col justify-between">
+    <div className="w-full mx-auto p-6 h-70 bg-white rounded-lg shadow-lg flex flex-col justify-between">
       <h2 className="text-xl font-semibold text-gray-800">Modelo Actual</h2>
 
       <div>
@@ -45,14 +45,14 @@ const ModelChange = () => {
         </label>
         <select
           id="model"
-          className="mt-1 block w-full p-2 bg-white border-none appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1 block w-full p-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={selectedModel}
           onChange={(e) => setSelectedModel(e.target.value)}
         >
           <option value="">--Selecciona un modelo--</option>
           {models.map((model, index) => (
             <option key={index} value={model}>
-              {formatModel(model)}
+              {model}
             </option>
           ))}
         </select>
@@ -65,9 +65,14 @@ const ModelChange = () => {
         )}
       </div>
 
-      <div className="flex justify-between space-x-4">
+      {/* Mostrar el modelo seleccionado con el formato especial */}
+      <div className="text-lg text-gray-700 mt-2 h-8 flex items-center">
+        {selectedModel && formatModel(selectedModel)}
+      </div>
+
+      <div className="flex justify-between space-x-4 mt-4">
         <button
-          className={`flex flex-col items-center justify-center w-full h-20 rounded-lg ${
+          className={`flex flex-col items-center justify-center w-full h-20 rounded-lg transition ${
             isActive
               ? "bg-blue-500 text-white hover:bg-blue-400 cursor-not-allowed"
               : "bg-white text-black border border-black hover:bg-gray-200"
@@ -79,7 +84,7 @@ const ModelChange = () => {
           Activar
         </button>
         <button
-          className={`flex flex-col items-center justify-center w-full h-20 rounded-lg ${
+          className={`flex flex-col items-center justify-center w-full h-20 rounded-lg transition ${
             isActive
               ? "bg-white text-black border border-black hover:bg-gray-200"
               : "bg-red-500 text-white hover:bg-red-400"

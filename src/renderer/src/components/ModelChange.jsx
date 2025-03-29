@@ -1,4 +1,4 @@
-import { useState } from "react"; from "react";
+import { useState } from "react";
 import { useModel } from "../context/modelContext"; // Importa el contexto de modelos
 
 const ModelChange = () => {

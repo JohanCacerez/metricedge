@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-
 import marcoImage from "../assets/marco.jpeg";
+import { useState, useEffect } from "react";
 
 export default function MeasureCapture() {
   const [sensorData, setSensorData] = useState("Cargando...");
@@ -46,7 +45,7 @@ export default function MeasureCapture() {
 
       <div className="flex flex-grow">
         {/* Área de medición con scroll (ocupa todo el espacio disponible) */}
-        <div className="relative flex-1 h-80 bg-gray-300 rounded-lg overflow-hidden border">
+        <div className="relative flex-1 h-96 bg-gray-300 rounded-lg overflow-hidden border">
           {/* Imagen de fondo */}
           <img
             src={marcoImage}
@@ -65,18 +64,6 @@ export default function MeasureCapture() {
 
         {/* Panel derecho */}
         <div className="w-1/4 ml-4 flex flex-col">
-          {/* Entradas de los sensores */}
-          <div className="mb-2">
-            <label className="block text-sm">
-              Sensor 1: <span>{sensorData}</span>
-            </label>
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm">
-              Sensor 2: <span>{sensorData2}</span>
-            </label>
-          </div>
-
           {/* Botones */}
           <div className="flex flex-col space-y-2 flex-grow">
             <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 flex-grow">

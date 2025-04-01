@@ -52,22 +52,20 @@ const UserManagementModal = ({ isOpen, onClose }) => {
 
   const handleSearchUser = async (event) => {
     event.preventDefault(); // Evita que se recargue la página
-    
+
     const response = await searchUserById(userId2);
     if (response.success) {
       console.log("Usuario encontrado:", response.user);
-      
+
       // Como response.user es un array de objetos, tomamos el primero
-      const userData = response.user[0]; 
-      
-      setUsername2(userData.name);  // Asegura que el campo "Nombre" se llene
-      setRange2(userData.range);    // Asegura que el "Tipo de usuario" se llene
+      const userData = response.user[0];
+
+      setUsername2(userData.name); // Asegura que el campo "Nombre" se llene
+      setRange2(userData.range); // Asegura que el "Tipo de usuario" se llene
     } else {
       console.log("Usuario no encontrado");
     }
   };
-  
-  
 
   const handleEditUser = async (event) => {
     event.preventDefault();
@@ -151,12 +149,18 @@ const UserManagementModal = ({ isOpen, onClose }) => {
               onChange={(e) => setUserId(e.target.value)}
               className="border border-gray-300 rounded p-2 mb-4 w-full"
             />
-            <button className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition">
+            <button
+              className="w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
+              type="submit"
+            >
               Eliminar
             </button>
           </form>
 
-          <form className="bg-gray-100 p-4 rounded-lg shadow" onSubmit={handleEditUser}>
+          <form
+            className="bg-gray-100 p-4 rounded-lg shadow"
+            onSubmit={handleEditUser}
+          >
             <h2 className="text-lg font-semibold mb-4">Editar usuario</h2>
             <label className="block font-medium">ID:</label>
             <input
@@ -165,7 +169,11 @@ const UserManagementModal = ({ isOpen, onClose }) => {
               onChange={(e) => setUserId2(e.target.value)}
               className="border border-gray-300 rounded p-2 mb-4 w-full"
             />
-            <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition mb-4" onClick={handleSearchUser}>
+            <button
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition mb-4"
+              onClick={handleSearchUser}
+              type="submit"
+            >
               Buscar
             </button>
             <label className="block font-medium">Nombre:</label>

@@ -5,42 +5,38 @@ const ModelContext = createContext();
 
 export const ModelProvider = ({ children }) => {
   const [selectedModel, setSelectedModel] = useState("");
+  const [selectedSensor1, setSelectedSensor1] = useState("");
+  const [selectedSensor2, setSelectedSensor2] = useState("");
   const [models, setModels] = useState([
-    // Lista de modelos inicial, puedes agregar más modelos por defecto
-    { name: "Front LH", sensors: 1, measurements: 10 },
-    { name: "Front RH", sensors: 2, measurements: 15 },
+    { name: "Front LH", sensors: [] },
+    { name: "Front RH", sensors: [] },
+    { name: "Rear LH", sensors: [] },
+    { name: "Rear RH", sensors: [] },
+    { name: "Model X LH", sensors: [] },
+    { name: "Model X RH", sensors: [] },
   ]);
+  
+  const [sensors, setSensors] = useState([
+    // Lista de sensores inicial, puedes agregar más sensores por defecto
+    { name: "Sensor 600mm", mm: "600" },
+    { name: "Sensor 1500mm", mm: "1500" },
+    { name: "Sensor 800mm", mm: "800" },
+    { name: "Sensor 1000mm", mm: "1000" },
+  ]);
+
+  //funcion para cambiar el tamaño del sensor
+  const changeSensorSize = (sensorName, sensorNumber) => {
+    if (sensorNumber === 1) {
+      setSelectedSensor1(sensorName);
+    } else if (sensorNumber === 2) {
+      setSelectedSensor2(sensorName);
+    }
+  };
+  
 
   // Función para cambiar el modelo seleccionado
   const changeModel = (modelName) => {
     setSelectedModel(modelName);
-  };
-
-  // Función para agregar un nuevo modelo
-  const addModel = (name, sensors, measurements) => {
-    setModels((prevModels) => [
-      ...prevModels,
-      { name, sensors, measurements },
-    ]);
-  };
-
-  // Función para eliminar un modelo
-  const deleteModel = (modelName) => {
-    setModels((prevModels) => prevModels.filter((model) => model.name !== modelName));
-    if (selectedModel === modelName) {
-      setSelectedModel(""); // Limpiar el modelo seleccionado si se elimina
-    }
-  };
-
-  // Función para editar un modelo
-  const editModel = (oldName, newName, newSensors, newMeasurements) => {
-    setModels((prevModels) =>
-      prevModels.map((model) =>
-        model.name === oldName
-          ? { name: newName, sensors: newSensors, measurements: newMeasurements }
-          : model
-      )
-    );
   };
 
   return (
@@ -49,9 +45,12 @@ export const ModelProvider = ({ children }) => {
         selectedModel,
         models,
         changeModel,
-        addModel,
-        deleteModel,
-        editModel,
+        sensors,
+        changeSensorSize,
+        selectedSensor1,
+        setSelectedSensor1,
+        selectedSensor2,
+        setSelectedSensor2,
       }}
     >
       {children}

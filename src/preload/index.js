@@ -10,8 +10,12 @@ const api = {
   loginUser: (name, password) => ipcRenderer.invoke('login-user', name, password),
   searchUserById: (id) => ipcRenderer.invoke('search-user-by-id', id),
   userDelete: (id) => ipcRenderer.invoke('user-delete', id),
+  editUser: (id, name, password, range) =>
+    ipcRenderer.invoke('edit-user', id, name, password, range),
+  //sensors
   readSensor: () => ipcRenderer.invoke('read-sensor'),
   readSensor2: () => ipcRenderer.invoke('read-sensor2'),
+
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

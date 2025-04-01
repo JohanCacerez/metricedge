@@ -18,6 +18,17 @@ export const initializeDatabase = () => {
       create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `)
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS measurements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT,
+      model TEXT,
+      value REAL,
+      create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users (id)
+    )
+  `)
   
   db.exec(`
     INSERT INTO users (id, name, password, range) 

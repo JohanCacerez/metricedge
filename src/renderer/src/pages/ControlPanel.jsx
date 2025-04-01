@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import ControlModelModal from "../components/modals/ControlModelModal"; // Asegúrate de importar el modal
+import { useState } from "react";
+import ControlModelModal from "../components/modals/ControlModelModal";
+import UserModal from "../components/modals/UserManagementModal"; // Importa el nuevo modal
 
 const ControlPanel = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [showModelModal, setShowModelModal] = useState(false);
+  const [showUserModal, setShowUserModal] = useState(false);
 
   const buttons = [
-    { label: "Control de Usuarios", action: () => console.log("Usuarios") },
-    { label: "Control de Modelos", action: () => setShowModal(true) },
+    { label: "Control de Usuarios", action: () => setShowUserModal(true) },
+    { label: "Control de Modelos", action: () => setShowModelModal(true) },
     { label: "Control de Base de Datos", action: () => console.log("Base de Datos") },
   ];
 
@@ -27,7 +29,9 @@ const ControlPanel = () => {
         </div>
       </div>
 
-      {showModal && <ControlModelModal closeModal={() => setShowModal(false)} />}
+      {showModelModal && <ControlModelModal closeModal={() => setShowModelModal(false)} />}
+      {showUserModal && <UserModal isOpen={showUserModal} onClose={() => setShowUserModal(false)} />}
+
     </div>
   );
 };

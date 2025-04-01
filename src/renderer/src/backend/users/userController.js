@@ -1,7 +1,7 @@
 // backend/users/userController.js
 
 import { ipcMain } from 'electron'
-import { getAllUsers, createUser, loginUser, SearchUserById, UserDelete } from './userService'
+import { getAllUsers, createUser, loginUser, SearchUserById, UserDelete, editUser } from './userService'
 
 export const registerUserIPCListeners = () => {
   ipcMain.handle('get-users', async () => {
@@ -23,6 +23,10 @@ export const registerUserIPCListeners = () => {
 
   ipcMain.handle('user-delete', async (_, id) => {
     return UserDelete(id)
+  })
+
+  ipcMain.handle('edit-user', async (_, id, name, password, range) => {
+    return editUser(id, name, password, range)
   })
 
   // Otras funciones IPC relacionadas con usuarios pueden ir aquí

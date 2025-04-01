@@ -24,6 +24,33 @@ export const createUser = async (id, name, password, range) => {
   }
 }
 
+export const editUser = async (id, name, password, range) => {
+  try {
+    // Si la contraseña está vacía, mantenemos la anterior
+    let query, params;
+
+    if (password) {
+      query = 'UPDATE users SET name = ?, password = ?, range = ? WHERE id = ?';
+      params = [name, password, range, id];
+    } else {
+      query = 'UPDATE users SET name = ?, range = ? WHERE id = ?';
+      params = [name, range, id];
+    }
+
+    const result = await runQuery(query, params);
+    
+    if (result.changes > 0) {
+      return { success: true };
+    } else {
+      return { success: false, message: 'Usuario no encontrado' };
+    }
+  } catch (error) {
+    console.error('Error editing user:', error);
+    return { success: false, message: 'Error editando el usuario' };
+  }
+};
+
+
 export const loginUser = async (name, password) => {
   const users = await queryDatabase('SELECT * FROM users WHERE name = ? AND password = ?', [
     name,
@@ -53,7 +80,7 @@ export const UserDelete = async (id) => {
   try {
     const result = await runQuery('DELETE FROM users WHERE id = ?', [id])
     if (result.changes > 0) {
-      return { success: true, message: 'usuario eliminado' }
+      return { success: true, message: 'Usuario eliminado' }
     } else {
       return { success: false, message: 'Usuario no encontrado' }
     }

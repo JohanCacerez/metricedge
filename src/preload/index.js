@@ -13,8 +13,9 @@ const api = {
   editUser: (id, name, password, range) =>
     ipcRenderer.invoke('edit-user', id, name, password, range),
   //sensors
-  readSensor: () => ipcRenderer.invoke('read-sensor'),
-  readSensor2: () => ipcRenderer.invoke('read-sensor2'),
+  readSensor: (port, mm, zero) => ipcRenderer.invoke('read-sensor', port, mm, zero),
+  readSensor2: (port, mm) => ipcRenderer.invoke('read-sensor2', port, mm),
+  setZero: (port, mm, zero) => ipcRenderer.invoke('set-zero', port, mm, zero)
 
 }
 

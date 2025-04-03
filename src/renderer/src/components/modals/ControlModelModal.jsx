@@ -3,9 +3,19 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 
 const ControlModelModal = ({ closeModal }) => {
-  const { models, changeModel, sensors, changeSensorSize } = useModel();
+  const {
+    models,
+    changeModel,
+    sensors,
+    changeSensorSize,
+    portSensor,
+    changeSensorPort,
+  } = useModel();
   const [selectedSensor1, setSelectedSensor1] = useState("");
   const [selectedSensor2, setSelectedSensor2] = useState("");
+
+  const [selectedSensor1Port, setSelectedSensor1Port] = useState("");
+  const [selectedSensor2Port, setSelectedSensor2Port] = useState("");
 
   const handleModelSelection = (e) => {
     changeModel(e.target.value);
@@ -19,20 +29,26 @@ const ControlModelModal = ({ closeModal }) => {
     setSelectedSensor2(e.target.value);
   };
 
+  const handlePortSensor1Change = (e) => {
+    setSelectedSensor1Port(e.target.value);
+  };
+
+  const handlePortSensor2Change = (e) => {
+    setSelectedSensor2Port(e.target.value);
+  };
+
   const handleActivate = (e) => {
     e.preventDefault();
-    if (selectedSensor1) {
-      const sensor = sensors.find((s) => s.name === selectedSensor1);
-      if (sensor) changeSensorSize(sensor.name, 1);
+    if (selectedSensor1 && selectedSensor1Port) {
+      changeSensorSize(selectedSensor1, 1);
+      changeSensorPort(selectedSensor1Port, 1);
     }
-    if (selectedSensor2) {
-      const sensor = sensors.find((s) => s.name === selectedSensor2);
-      if (sensor) changeSensorSize(sensor.name, 2);
+    if (selectedSensor2 && selectedSensor2Port) {
+      changeSensorSize(selectedSensor2, 2);
+      changeSensorPort(selectedSensor2Port, 2);
     }
     closeModal();
   };
-  
-  
 
   return (
     <div
@@ -68,7 +84,7 @@ const ControlModelModal = ({ closeModal }) => {
           </select>
 
           <div>
-            <label>Tamaño del sensor 1:</label>
+            <label>Configuracion sensor 1:</label>
             <select
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={selectedSensor1}
@@ -77,7 +93,19 @@ const ControlModelModal = ({ closeModal }) => {
               <option value="">--Selecciona el sensor--</option>
               {sensors.map((sensor, index) => (
                 <option key={index} value={sensor.name}>
-                  {sensor.name} ({sensor.mm}mm)
+                  {sensor.name}
+                </option>
+              ))}
+            </select>
+            <select
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedSensor1Port}
+              onChange={(e) => setSelectedSensor1Port(e.target.value)}
+            >
+              <option value="">--Seleccione el puerto del sensor 1--</option>
+              {portSensor.map((port, index) => (
+                <option key={index} value={port.port}>
+                  {port.name}
                 </option>
               ))}
             </select>
@@ -91,7 +119,20 @@ const ControlModelModal = ({ closeModal }) => {
               <option value="">--Selecciona el sensor--</option>
               {sensors.map((sensor, index) => (
                 <option key={index} value={sensor.name}>
-                  {sensor.name} ({sensor.mm}mm)
+                  {sensor.name}
+                </option>
+              ))}
+            </select>
+            
+            <select
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={selectedSensor2Port}
+              onChange={(e) => setSelectedSensor2Port(e.target.value)}
+            >
+              <option value="">--Seleccione el puerto del sensor 2--</option>
+              {portSensor.map((port, index) => (
+                <option key={index} value={port.port}>
+                  {port.name}
                 </option>
               ))}
             </select>

@@ -1,11 +1,14 @@
-import { ipcMain } from 'electron'
-import {readSensor, readSensor2} from './sensorService'
+import { ipcMain } from "electron";
+import { readSensor } from "./sensorService";
 
 export const readSensorIPCListeners = () => {
-  ipcMain.handle('read-sensor', async () => {
-    return readSensor()
-  }),
-  ipcMain.handle('read-sensor2', async () => {
-    return readSensor2()
+  ipcMain.handle("read-sensor", async (_, port, mm, zero) => {
+    console.log(zero, "controler")
+    return readSensor(port, mm, zero);
   })
-}
+  /*
+  ipcMain.handle('read-sensor2', async (_, port, mm) => {
+    console.log("controller2", port, mm)
+    return readSensor2(port, mm)
+  }) */
+};

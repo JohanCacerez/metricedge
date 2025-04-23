@@ -9,7 +9,7 @@ def read_sensor(port, mm_max):
 
     try:
         with nidaqmx.Task() as task:
-            task.ai_channels.add_ai_voltage_chan(f"Dev1/{port}", min_val=2, max_val=10)
+            task.ai_channels.add_ai_voltage_chan(f"Dev2/{port}", min_val=2, max_val=10)
             voltaje = task.read()
             
             voltaje_ajustado = voltaje + OFFSET_VOLTAGE

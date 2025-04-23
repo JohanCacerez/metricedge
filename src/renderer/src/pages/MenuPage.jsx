@@ -23,9 +23,6 @@ export default function MenuPage() {
         <div className="w-1/2 pr-2">
           <ModelChange />
         </div>
-        <div className="w-1/2 pl-2">
-          <MeasurementHistory />
-        </div>
       </div>
       <div className="flex-1 overflow-auto">
         <MeasureCapture />

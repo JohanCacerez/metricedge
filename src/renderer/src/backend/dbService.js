@@ -24,6 +24,9 @@ export const initializeDatabase = () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       model TEXT NOT NULL,
       user_id TEXT NOT NULL,
+      total_measurements INTEGER DEFAULT 0,
+      median REAL DEFAULT 0,
+      range REAL DEFAULT 0,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     );

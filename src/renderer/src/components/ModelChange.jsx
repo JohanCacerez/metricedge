@@ -7,6 +7,8 @@ const ModelChange = () => {
     selectedSensor2,
     selectedSensor1Port,
     selectedSensor2Port,
+    device1,
+    device2,
   } = useModel();
   const activeModel = models.find((model) => model.name === selectedModel);
 
@@ -19,10 +21,10 @@ const ModelChange = () => {
         <div className="mt-4">
           <p className="text-lg text-gray-600">Nombre: {activeModel.name}</p>
           <p className="text-lg text-gray-600">
-            Sensor 1: {selectedSensor1} ({selectedSensor1Port})
+            Sensor 1: {selectedSensor1} ({selectedSensor1Port}) Dev {device1}
           </p>
           <p className="text-lg text-gray-600">
-            Sensor 2: {selectedSensor2} ({selectedSensor2Port})
+            Sensor 2: {selectedSensor2} ({selectedSensor2Port} Dev {device2}
           </p>
         </div>
       ) : (

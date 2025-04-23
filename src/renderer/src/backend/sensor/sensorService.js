@@ -8,13 +8,12 @@ import { queryDatabase, insertIntoDatabase, runQuery } from '../dbService'
 const basePath = app.getPath("userData");
 
 // Construimos la ruta relativa al directorio 'src/renderer/src/backend/sensor/'
-const sensor1Path = join(basePath, "sensor1.py");
-const sensor2Path = join(basePath, "sensor2.py");
+const sensor1Path = join(basePath, "prueba.py");
 
-export const readSensor = async (port, mm, zero) => {
+export const readSensor = async (port, mm, zero, device) => {
   return new Promise((resolve) => {
     exec(
-      `py "${sensor1Path}" ${port} ${mm} ${zero}`,
+      `py "${sensor1Path}" ${port} ${mm} ${zero} ${device}`,
       (error, stdout, stderr) => {
         if (error) {
           resolve(`Error: ${error.message}`);
@@ -38,17 +37,26 @@ export const createMeasurement = async (dataArray) => {
       return { success: false, message: 'Usuario no encontrado' };
     }
 
+    // Calcular suma, promedio y rango
+    const numericValues = values.map(Number); // Por si vienen como strings
+    const sum = numericValues.reduce((acc, val) => acc + val, 0);
+    const average = sum / numericValues.length;
+    const range = Math.max(...numericValues) - Math.min(...numericValues);
+
     // Insertamos en measurements
     const insertMeasurementQuery = `
-      INSERT INTO measurements (model, user_id) VALUES (?, ?)
+      INSERT INTO measurements (model, user_id, total_measurements, median, range)
+      VALUES (?, ?, ?, ?, ?)
     `;
-    const { id: measurementId } = insertIntoDatabase(insertMeasurementQuery, [model, userId]);
+    const { id: measurementId } = insertIntoDatabase(insertMeasurementQuery, [
+      model, userId, sum, average, range
+    ]);
 
     // Insertamos cada valor en measurement_values
     const insertValueQuery = `
       INSERT INTO measurement_values (measurement_id, position_index, value) VALUES (?, ?, ?)
     `;
-    values.forEach((value, index) => {
+    numericValues.forEach((value, index) => {
       runQuery(insertValueQuery, [measurementId, index, value]);
     });
 
@@ -58,4 +66,5 @@ export const createMeasurement = async (dataArray) => {
     return { success: false, message: 'Error al registrar la medición' };
   }
 };
+
 

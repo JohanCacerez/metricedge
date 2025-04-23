@@ -13,11 +13,16 @@ const api = {
   editUser: (id, name, password, range) =>
     ipcRenderer.invoke('edit-user', id, name, password, range),
   //sensors
-  readSensor: (port, mm, zero) => ipcRenderer.invoke('read-sensor', port, mm, zero),
+  readSensor: (port, mm, zero, device) => ipcRenderer.invoke('read-sensor', port, mm, zero, device),
   readSensor2: (port, mm) => ipcRenderer.invoke('read-sensor2', port, mm),
   setZero: (port, mm, zero) => ipcRenderer.invoke('set-zero', port, mm, zero),
   createMeasurement: (dataArray) =>
     ipcRenderer.invoke('create-measurement', dataArray),
+  //measurements
+  getPromMeasurements: () =>
+    ipcRenderer.invoke('get-prom-measurements'),
+  getRangeMeasurements: () =>
+    ipcRenderer.invoke('get-range-measurements'),
 
 }
 

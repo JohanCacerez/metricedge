@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 import { initializeDatabase } from '../renderer/src/backend/dbService'
 import { registerUserIPCListeners } from '../renderer/src/backend/users/userController'
 import {readSensorIPCListeners} from '../renderer/src/backend/sensor/sensorController'
+import { measureIPCListeners } from '../renderer/src/backend/Measures/measureController'
 import { read } from 'fs'
 
 const { exec } = require('child_process')
@@ -66,6 +67,7 @@ app.whenReady().then(() => {
   createWindow()
   registerUserIPCListeners()
   readSensorIPCListeners()
+  measureIPCListeners()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -4,9 +4,23 @@ import { createContext, useContext, useState } from "react";
 const ModelContext = createContext();
 
 export const ModelProvider = ({ children }) => {
-  const [selectedModel, setSelectedModel] = useState("");
-  const [selectedSensor1, setSelectedSensor1] = useState("");
-  const [selectedSensor2, setSelectedSensor2] = useState("");
+  const [selectedModel, setSelectedModel] = useState(() => {
+    return localStorage.getItem("selectedModel") || "";
+  });
+  
+  const [selectedSensor1, setSelectedSensor1] = useState(() => {
+    return localStorage.getItem("selectedSensor1") || "";
+  });
+  const [selectedSensor2, setSelectedSensor2] = useState(() => {
+    return localStorage.getItem("selectedSensor2") || "";
+  });
+
+  const [device1, setDevice1] = useState(() => {
+    return localStorage.getItem("device1") || "";
+  });
+  const [device2, setDevice2] = useState(() => {
+    return localStorage.getItem("device2") || "";
+  });
   const [models, setModels] = useState([
     { name: "Front LH", sensors: [] },
     { name: "Front RH", sensors: [] },
@@ -44,15 +58,23 @@ export const ModelProvider = ({ children }) => {
     { name: "COM17", port: "ai16" },
   ]);
 
-  const [selectedSensor1Port, setSelectedSensor1Port] = useState("");
-  const [selectedSensor2Port, setSelectedSensor2Port] = useState("");
+  const [selectedSensor1Port, setSelectedSensor1Port] = useState(() => {
+    return localStorage.getItem("selectedSensor1Port") || "";
+  }
+);
+  const [selectedSensor2Port, setSelectedSensor2Port] = useState(() => {
+    return localStorage.getItem("selectedSensor2Port") || "";
+  }
+);
 
   // Función para cambiar el puerto del sensor
   const changeSensorPort = (port, sensorNumber) => {
     if (sensorNumber === 1) {
       setSelectedSensor1Port(port);
+      localStorage.setItem("selectedSensor1Port", port);
     } else if (sensorNumber === 2) {
       setSelectedSensor2Port(port);
+      localStorage.setItem("selectedSensor2Port", port);
     }
   };
 
@@ -60,15 +82,30 @@ export const ModelProvider = ({ children }) => {
   const changeSensorSize = (sensorName, sensorNumber) => {
     if (sensorNumber === 1) {
       setSelectedSensor1(sensorName);
+      localStorage.setItem("selectedSensor1", sensorName);
     } else if (sensorNumber === 2) {
       setSelectedSensor2(sensorName);
+      localStorage.setItem("selectedSensor2", sensorName);
+    }
+  };
+
+  // Función para cambiar el dispositivo
+  const changeDevice = (deviceName,sensorNumber) => {
+    if (sensorNumber === 1) {
+      setDevice1(deviceName);
+      localStorage.setItem("device1", deviceName);
+    } else if (sensorNumber === 2) {
+      setDevice2(deviceName);
+      localStorage.setItem("device2", deviceName);
     }
   };
 
   // Función para cambiar el modelo seleccionado
   const changeModel = (modelName) => {
     setSelectedModel(modelName);
+    localStorage.setItem("selectedModel", modelName);
   };
+  
 
   return (
     <ModelContext.Provider
@@ -87,6 +124,9 @@ export const ModelProvider = ({ children }) => {
         changeSensorPort,
         selectedSensor1Port,
         selectedSensor2Port,
+        changeDevice,
+        device1,
+        device2,
       }}
     >
       {children}

@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { useModel } from "../context/modelContext";
-import { useUser } from "../context/UserContext"; // Ajusta la ruta si es diferente
-
+import { useUser } from "../context/UserContext";
 
 export default function MeasureCapture() {
-  const { selectedSensor1, selectedSensor1Port, selectedSensor2, selectedSensor2Port, selectedModel } = useModel();
+  const {
+    selectedSensor1,
+    selectedSensor1Port,
+    selectedSensor2,
+    selectedSensor2Port,
+    selectedModel,
+    device1,
+    device2,
+  } = useModel();
   const { user } = useUser();
-
 
   const modelMeasurementCount = {
     "Front LH": 3,
@@ -18,32 +24,57 @@ export default function MeasureCapture() {
   const sensorAssignment = {
     "Front LH": [0, 0, 0],
     "Front RH": [0, 0, 0],
-    "Rear LH": [0, 0, 0, 1], // últimos index por sensor 2
+    "Rear LH": [0, 0, 0, 1],
     "Rear RH": [0, 0, 0, 1],
   };
 
   const measurementPositions = {
     "Front LH": [
-      { top: "40%", left: "32%" },
       { top: "42%", left: "72%" },
-      { top: "25%", left: "50%" },
+      { top: "42%", left: "32%" },
+      { top: "42%", left: "20%" },
     ],
     "Front RH": [
-      { top: "40%", left: "62%" },
-      { top: "42%", left: "20%" },
-      { top: "25%", left: "40%" },
+      { top: "42%", left: "22%" },
+      { top: "42%", left: "62%" },
+      { top: "42%", left: "78%" },
     ],
     "Rear LH": [
-      { top: "37%", left: "27%" },
-      { top: "37%", left: "63%" },
-      { top: "20%", left: "45%" },
-      { top: "40%", left: "75%" },
+      { top: "37%", left: "49%" },
+      { top: "37%", left: "29%" },
+      { top: "37%", left: "21%" },
+      { top: "71%", left: "78%" },
     ],
     "Rear RH": [
-      { top: "37%", left: "66%" },
-      { top: "37%", left: "30%" },
-      { top: "20%", left: "45%" },
-      { top: "38%", left: "14%" },
+      { top: "37%", left: "44%" },
+      { top: "37%", left: "67%" },
+      { top: "37%", left: "75%" },
+      { top: "71%", left: "18%" },
+    ],
+  };
+
+  const tolerances = {
+    "Front LH": [
+      { min: 10, max: 20 },
+      { min: 5, max: 15 },
+      { min: 8, max: 18 },
+    ],
+    "Front RH": [
+      { min: 10, max: 20 },
+      { min: 5, max: 15 },
+      { min: 8, max: 18 },
+    ],
+    "Rear LH": [
+      { min: 12, max: 22 },
+      { min: 6, max: 16 },
+      { min: 9, max: 19 },
+      { min: 7, max: 17 },
+    ],
+    "Rear RH": [
+      { min: 0, max: 700 },
+      { min: 7, max: 17 },
+      { min: 10, max: 20 },
+      { min: 6, max: 16 },
     ],
   };
 
@@ -51,8 +82,8 @@ export default function MeasureCapture() {
   const [accumulatedZero, setAccumulatedZero] = useState([0, 0, 0, 0]);
   const [currentMeasurementIndex, setCurrentMeasurementIndex] = useState(0);
   const [sensorValues, setSensorValues] = useState(["Cargando...", "Cargando...", "Cargando...", "Cargando..."]);
+  const [lastValidValues, setLastValidValues] = useState(["0", "0", "0", "0"]);
 
-  // Leer el sensor específico
   const handleMeasure = async () => {
     const positionCount = modelMeasurementCount[selectedModel];
     if (currentMeasurementIndex >= positionCount) return;
@@ -62,7 +93,7 @@ export default function MeasureCapture() {
     const port = sensorIndex === 0 ? selectedSensor1Port : selectedSensor2Port;
 
     try {
-      const data = await window.api.readSensor(port, sensor, accumulatedZero[sensorIndex]);
+      const data = await window.api.readSensor(port, sensor, accumulatedZero[sensorIndex], device1);
       if (!data.startsWith("Error")) {
         const parsed = parseFloat(data);
         if (!isNaN(parsed)) {
@@ -90,29 +121,34 @@ export default function MeasureCapture() {
     }
   };
 
-  // Actualiza constantemente los valores en tiempo real (si se quiere mostrarlo en algún lado)
   useEffect(() => {
     const interval = setInterval(() => {
       [selectedSensor1, selectedSensor2].forEach((sensor, index) => {
         window.api
-          .readSensor(index === 0 ? selectedSensor1Port : selectedSensor2Port, sensor, accumulatedZero[index])
+          .readSensor(index === 0 ? selectedSensor1Port : selectedSensor2Port, sensor, accumulatedZero[index], device1)
           .then((data) => {
             setSensorValues((prev) => {
               const updated = [...prev];
-              updated[index] = data.startsWith("Error") ? "Error" : data;
+              if (!data.startsWith("Error")) {
+                updated[index] = data;
+                setLastValidValues((last) => {
+                  const newLast = [...last];
+                  newLast[index] = data;
+                  return newLast;
+                });
+              } else {
+                updated[index] = lastValidValues[index]; // Usar última válida
+              }
               return updated;
             });
           });
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [accumulatedZero]);
+  }, [accumulatedZero, selectedSensor1, selectedSensor2, selectedSensor1Port, selectedSensor2Port, device1]);
 
-  const modelDataReady =
-    currentMeasurementIndex === modelMeasurementCount[selectedModel];
-
-    const finalArray = [user?.id || "UsuarioDesconocido", selectedModel, ...capturedMeasurements];
-
+  const modelDataReady = currentMeasurementIndex === modelMeasurementCount[selectedModel];
+  const finalArray = [user?.id || "UsuarioDesconocido", selectedModel, ...capturedMeasurements];
 
   const handleReset = () => {
     setCapturedMeasurements([]);
@@ -120,16 +156,14 @@ export default function MeasureCapture() {
   };
 
   const handleSave = async () => {
-    const dataArray = [user?.id || "UsuarioDesconocido", selectedModel, ...capturedMeasurements];
-    const result = await window.api.createMeasurement(dataArray);
+    const result = await window.api.createMeasurement(finalArray);
     if (result.success) {
       alert(`Medición guardada con ID: ${result.measurementId}`);
       handleReset();
     } else {
       alert(`Error al guardar la medición: ${result.message}`);
     }
-  }
-  
+  };
 
   return (
     <div className="h-full flex flex-col p-4 bg-white rounded-lg shadow-lg">
@@ -141,23 +175,32 @@ export default function MeasureCapture() {
             alt="Modelo"
             className="w-full h-full rounded-lg shadow-md"
           />
-          {measurementPositions[selectedModel]?.map((pos, index) => (
-            <div
-              key={index}
-              className={`absolute p-2 rounded shadow-md transition-all duration-300 ${
-                index === currentMeasurementIndex
-                  ? "bg-yellow-200 font-bold"
-                  : "bg-white"
-              }`}
-              style={{ top: pos.top, left: pos.left }}
-            >
-              {capturedMeasurements[index] !== undefined
-  ? capturedMeasurements[index]
-  : index === currentMeasurementIndex
-    ? sensorValues[sensorAssignment[selectedModel][index]]
-    : "---"}
-            </div>
-          ))}
+          {measurementPositions[selectedModel]?.map((pos, index) => {
+            const value = capturedMeasurements[index];
+            const isCurrent = index === currentMeasurementIndex;
+            let bgColor = "bg-white";
+
+            if (value !== undefined) {
+              const { min, max } = tolerances[selectedModel][index];
+              bgColor = value >= min && value <= max ? "bg-green-300" : "bg-red-400";
+            } else if (isCurrent) {
+              bgColor = "bg-yellow-200";
+            }
+
+            return (
+              <div
+                key={index}
+                className={`absolute p-2 rounded shadow-md text-xs font-bold ${bgColor}`}
+                style={{ top: pos.top, left: pos.left }}
+              >
+                {value !== undefined
+                  ? value.toFixed(2)
+                  : isCurrent
+                    ? sensorValues[sensorAssignment[selectedModel][index]]
+                    : "---"}
+              </div>
+            );
+          })}
         </div>
 
         <div className="w-1/4 ml-4 flex flex-col h-full">
@@ -177,7 +220,6 @@ export default function MeasureCapture() {
               📏 Medir
             </button>
 
-            {/* Botones de Cero */}
             {(selectedModel === "Front LH" || selectedModel === "Front RH") && (
               <button
                 className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 flex-grow"
@@ -204,18 +246,16 @@ export default function MeasureCapture() {
               </>
             )}
 
-<button
-  className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 flex-grow"
-  onClick={handleReset}
->
-  ♻️ Reiniciar
-</button>
-
+            <button
+              className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 flex-grow"
+              onClick={handleReset}
+            >
+              ♻️ Reiniciar
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Muestra final de los datos cuando ya se midieron todas las posiciones */}
       {modelDataReady && (
         <div className="mt-4 p-3 border rounded bg-gray-100 text-sm font-mono">
           📦 Datos listos para guardar:{" "}

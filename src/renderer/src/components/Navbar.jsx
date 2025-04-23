@@ -1,11 +1,9 @@
 import {
-  FaChartBar,
-  FaFileAlt,
-  FaCog,
   FaHome,
   FaUserShield,
   FaSignOutAlt,
   FaSignInAlt,
+  FaChartLine
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom"; // Importa useLocation
 import { useState, useEffect } from "react";
@@ -87,32 +85,18 @@ export default function Navbar() {
               <FaHome /> Inicio
             </Link>
           </li>
-          <li>
-            <Link
-              to="/graficas"
-              className={`hover:text-primary p-3 flex items-center gap-2 ${isActive("/graficas")}`}
-            >
-              <FaChartBar /> Gráficas
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/reportes"
-              className={`hover:text-primary p-3 flex items-center gap-2 ${isActive("/reportes")}`}
-            >
-              <FaFileAlt /> Reportes
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/configuracion"
-              className={`hover:text-primary p-3 flex items-center gap-2 ${isActive("/configuracion")}`}
-            >
-              <FaCog /> Configuración
-            </Link>
-          </li>
+          
           {/* Mostrar el enlace solo si el usuario es admin */}
           {user?.range === "admin" && (
+            <>
+            <li>
+            <Link
+              to="/measure"
+              className={`hover:text-primary p-3 flex items-center gap-2 ${isActive("/measure")}`}
+            >
+              <FaChartLine /> Grafica
+            </Link>
+          </li>
             <li>
               <Link
                 to="/controlpanel"
@@ -121,6 +105,8 @@ export default function Navbar() {
                 <FaUserShield /> Panel de Control
               </Link>
             </li>
+            
+          </>
           )}
         </ul>
       </nav>

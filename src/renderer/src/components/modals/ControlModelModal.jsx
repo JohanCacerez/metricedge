@@ -10,6 +10,9 @@ const ControlModelModal = ({ closeModal }) => {
     changeSensorSize,
     portSensor,
     changeSensorPort,
+    device1,
+    device2,
+    changeDevice,
   } = useModel();
   const [selectedSensor1, setSelectedSensor1] = useState("");
   const [selectedSensor2, setSelectedSensor2] = useState("");
@@ -42,10 +45,12 @@ const ControlModelModal = ({ closeModal }) => {
     if (selectedSensor1 && selectedSensor1Port) {
       changeSensorSize(selectedSensor1, 1);
       changeSensorPort(selectedSensor1Port, 1);
+      changeDevice(device1, 1);
     }
     if (selectedSensor2 && selectedSensor2Port) {
       changeSensorSize(selectedSensor2, 2);
       changeSensorPort(selectedSensor2Port, 2);
+      changeDevice(device2, 2);
     }
     closeModal();
   };
@@ -104,6 +109,7 @@ const ControlModelModal = ({ closeModal }) => {
                 </option>
               ))}
             </select>
+            
 
             <label>Tamaño del sensor 2:</label>
             <input
@@ -113,7 +119,7 @@ const ControlModelModal = ({ closeModal }) => {
               value={selectedSensor2}
               onChange={(e) => setSelectedSensor2(e.target.value)}
             />
-            
+
             <select
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={selectedSensor2Port}
@@ -126,6 +132,15 @@ const ControlModelModal = ({ closeModal }) => {
                 </option>
               ))}
             </select>
+
+            <label>Seleccione el dispositivo</label>
+            <input
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              placeholder="ej: 1"
+              onChange={(e) => changeDevice(e.target.value, 1)}
+              value={device1}
+            />
           </div>
 
           <div className="flex justify-center m-4">

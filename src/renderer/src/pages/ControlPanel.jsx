@@ -9,7 +9,6 @@ const ControlPanel = () => {
   const buttons = [
     { label: "Control de Usuarios", action: () => setShowUserModal(true) },
     { label: "Control de Modelos", action: () => setShowModelModal(true) },
-    { label: "Control de Base de Datos", action: () => console.log("Base de Datos") },
   ];
 
   return (
